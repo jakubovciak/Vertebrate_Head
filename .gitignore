@@ -1,0 +1,31 @@
+# History files
+.Rhistory
+.Rapp.history
+
+# Session Data files
+.RData
+
+# User-specific files
+.Ruserdata
+.Rprofile
+
+# RStudio files
+.Rproj.user/
+*.Rproj
+
+# rendered Rmds
+*.pdf
+
+# OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
+.httr-oauth
+
+# renv
+renv/
+
+# others
+.DS_Store
+
+# output
+timepoints_rds/
+output/
+figures/

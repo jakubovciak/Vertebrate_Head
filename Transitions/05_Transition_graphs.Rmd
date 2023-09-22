@@ -1,0 +1,279 @@
+---
+title: "Kozmikova 2023 Amphioxus Head Transitions"
+author: "Jan Kubovciak, Institute of Molecular Genetics of the Czech Academy of Sciences"
+output:
+  pdf_document:
+    number_sections: false
+    toc: true
+    df_print: paged
+---
+
+last updated: `r Sys.time()`
+
+```{r setup_glob, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = TRUE,
+  cache = FALSE,
+  fig.height = 4,
+  fig.width = 7,
+  cache.lazy = FALSE
+)
+
+library(ggplot2)
+library(URD)
+library(scater)
+library(dplyr)
+library(igraph)
+library(openxlsx)
+source('./_functions.r')
+
+```
+
+# Preprocess
+
+Load data and select Ectoderm ELAVL4-positive cells:
+
+```{r}
+tm <- readRDS('output/amp_u_TM.RDS')
+
+urd_o <- readRDS('output/amp_u_MNN.RDS')
+sc_int <- readRDS('output/amp_merged_sc_int.RDS')
+sc_int$elavl_plus <- assay(sc_int, 'logcounts')['ELAVL4', ] > 0
+urd_o@meta$celltype[urd_o@meta$celltype == 'Ectoderm' &
+                      urd_o@meta$stage == 'N0' & sc_int$elavl_plus] <- 'Ectoderm_elavl'
+
+stages_used <- levels(urd_o@group.ids$stage)
+```
+
+# Transition graphs
+
+Transition graph by stages:
+
+```{r}
+tm_stage <- sapply(stages_used, function(cellt_A) {
+  tm_subA <- tm[urd_o@meta$stage == cellt_A, ]
+  sapply(stages_used, function(cellt_B) {
+    tm_subAB <- tm_subA[, urd_o@meta$stage == cellt_B]
+    mean_prob_AB <- mean(tm_subAB)
+    return(mean_prob_AB)
+  })
+})
+
+g_stage <-
+  graph_from_adjacency_matrix(
+    tm_stage,
+    mode = 'directed',
+    weighted = T,
+    diag = F,
+    add.colnames = TRUE
+  )
+V(g_stage)$name <- rownames(tm_stage)
+E(g_stage)$width <- E(g_stage)$weight
+g_stage_layout <- igraph::layout_with_fr(g_stage)
+
+gplot_stage <-
+  igraph2ggplot(
+    layout_df = g_stage_layout,
+    graph_o = g_stage,
+    scale_by_node = TRUE,
+    max_width = 1.5,
+    width_limit_min = 0.1,
+    node_size = 4,
+    lab_size = 3,
+    arrow_offset = 0.05,
+    arrow_length = 0.1,
+    label_col = 'gray21'
+  )
+gplot_stage+ggtitle("Transitions among timepoints")
+```
+
+Average transition matrix based on annotated celltypes and timepoints:
+
+```{r}
+
+# merge celltype and stage factors to obtain meaningful cell groups
+urd_o@meta$celltype_stage <-
+  paste0(urd_o@meta$celltype, '_', urd_o@meta$stage)
+
+tm_celltype_stage_raw <-
+  sapply(sort(unique(urd_o@meta$celltype_stage)), function(cellt_A) {
+    tm_subA <- tm[urd_o@meta$celltype_stage == cellt_A, ]
+    sapply(sort(unique(urd_o@meta$celltype_stage)), function(cellt_B) {
+      tm_subAB <- tm_subA[, urd_o@meta$celltype_stage == cellt_B]
+      mean_prob_AB <- mean(tm_subAB)
+      return(mean_prob_AB)
+    })
+  })
+
+tm_celltype_stage <- tm_celltype_stage_raw
+
+# set diagonal to 0 prior to scaling to achieve better distribution of scaled values
+diag(tm_celltype_stage) <- 0
+
+
+tm_celltype_stage_scale <- scale(t(tm_celltype_stage))
+
+# create also matrix with order of probabilities
+tm_celltype_stage_order <-
+  sapply(1:ncol(tm_celltype_stage_scale), function(x) {
+    match(rownames(tm_celltype_stage_scale), names(sort(tm_celltype_stage_scale[, x], decreasing = TRUE)))
+  })
+
+```
+
+Create graph from selected celltypes to show Crest and Prechordal Plate lineage:
+
+```{r}
+crest_lineage<-c('Ectoderm_elavl_N0',
+                 'AnteriorNeuralPlate_N2',
+                 'LeftDiverticulum_N5',
+                 'Ectoderm_N5',
+                 'NeuralCrest-likeCells_N5',
+                 'AnteriorNeuralTube_N5')
+
+pp_lineage<-c('Notochord_N5',
+              'Notochord_N0',
+              'Notochord_N2',
+              'AnteriorTipNotochord_N5',
+              'AxialMesendoderm_G4',
+              'PrechordalPlate_N0',
+              'PrechordalMesoderm_N2',
+              'PreaxialMesendoderm_G4',
+              'AnteriorEndoderm_N0',
+              'LeftDiverticulum_N5',
+              'PharyngealAntEndo1_N5',
+              'AnteriorNeuralPlate_N2',
+              'PharyngealEndoderm_N2')
+
+# subset matrices
+crest_tm_scaled <- tm_celltype_stage_scale[crest_lineage, crest_lineage]
+crest_tm <- t(tm_celltype_stage[crest_lineage, crest_lineage])
+
+pp_tm_scaled <- tm_celltype_stage_scale[pp_lineage, pp_lineage]
+pp_tm <- t(tm_celltype_stage[pp_lineage, pp_lineage])
+
+
+# create igraphs
+graph_crest_scaled <-
+  graph_from_adjacency_matrix(
+    t(crest_tm_scaled),
+    mode = 'directed',
+    weighted = T,
+    diag = F,
+    add.colnames = TRUE
+  )
+V(graph_crest_scaled)$name <- rownames(crest_tm_scaled)
+E(graph_crest_scaled)$width <- E(graph_crest_scaled)$weight
+
+graph_crest <-
+  graph_from_adjacency_matrix(
+    t(crest_tm),
+    mode = 'directed',
+    weighted = T,
+    diag = F,
+    add.colnames = TRUE
+  )
+V(graph_crest)$name <- rownames(crest_tm)
+
+E(graph_crest)$width <- E(graph_crest)$weight
+
+
+graph_crest_layout <- igraph::layout_with_fr(graph_crest)
+
+graph_pp_scaled <-
+  graph_from_adjacency_matrix(
+    t(pp_tm_scaled),
+    mode = 'directed',
+    weighted = T,
+    diag = F,
+    add.colnames = TRUE
+  )
+V(graph_pp_scaled)$name <- rownames(pp_tm_scaled)
+E(graph_pp_scaled)$width <- E(graph_pp_scaled)$weight
+
+graph_pp <-
+  graph_from_adjacency_matrix(
+    t(pp_tm),
+    mode = 'directed',
+    weighted = T,
+    diag = F,
+    add.colnames = TRUE
+  )
+V(graph_pp)$name <- rownames(pp_tm)
+E(graph_pp)$width <- E(graph_pp)$weight
+
+
+graph_pp_layout <- igraph::layout_with_fr(graph_pp)
+
+```
+
+# Show transitions
+
+Show selected lineages using automatic layout:
+
+```{r}
+
+gplot_pp <-
+  igraph2ggplot(
+    layout_df = graph_pp_layout,
+    graph_o = graph_pp_scaled,
+    keep_max_to = TRUE,
+    width_limit_min = 0.9,
+    scale_by_node = FALSE,
+    max_width = 1.5,
+    filter_skip = TRUE,
+    arrow_offset = 0.05,
+    arrow_length = 0.1,
+    node_size = 4,
+    lab_size = 3,
+    label_col = 'gray21'
+  )
+
+gplot_pp + ggtitle('Prechordal plate trajectories')
+
+gplot_crest <-
+  igraph2ggplot(
+    layout_df = graph_crest_layout,
+    graph_o = graph_crest_scaled,
+    keep_max_to = FALSE,
+    max_width = 1.5,
+    width_limit_min = 0.5,
+    scale_by_node = FALSE,
+    arrow_offset = 0.05,
+    arrow_length = 0.1,
+    node_size = 4,
+    lab_size = 3,
+    label_col = 'gray21'
+  )
+
+gplot_crest + ggtitle('Crest trajectories')
+
+```
+
+Export transition matrices in .xlsx format:
+
+```{r}
+write.xlsx(
+  list(
+    mat_raw = as.data.frame(signif(t(
+      tm_celltype_stage_raw
+    ), 5)),
+    mat_scale_order = as.data.frame(tm_celltype_stage_order),
+    mat_scale_cols = as.data.frame(tm_celltype_stage_scale),
+    mat_scale_rows = as.data.frame(t(scale(tm_celltype_stage)))
+  ),
+  file = 'output/transition_probs.xlsx',
+  rowNames = TRUE
+)
+```
+
+
+***Session Info***
+
+```{r index_7}
+sessionInfo()
+```
+
+

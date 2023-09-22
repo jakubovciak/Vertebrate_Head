@@ -1,0 +1,170 @@
+---
+title: "Kozmikova 2023 Amphioxus Head integration"
+author: "Jan Kubovciak, Institute of Molecular Genetics of the Czech Academy of Sciences"
+output:
+  pdf_document:
+    number_sections: false
+    toc: true
+    df_print: paged
+---
+
+last updated: `r Sys.time()`
+
+```{r setup_glob, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = TRUE,
+  cache = FALSE,
+  fig.height = 4,
+  fig.width = 7,
+  cache.lazy = FALSE
+)
+library(ggplot2)
+library(Seurat)
+library(batchelor)
+library(scater)
+library(dplyr)
+dir.create('./output/', showWarnings = FALSE)
+
+```
+
+# Preprocess
+
+Load Seurat objects for individual stages:
+
+```{r}
+
+amp_list <- list(
+  G4 = readRDS('../timepoints_rds/Amp_G4.RDS'),
+  N0 = readRDS('../timepoints_rds/Amp_N0.RDS'),
+  N2 = readRDS('../timepoints_rds/Amp_N2.RDS'),
+  N5 = readRDS('../timepoints_rds/Amp_N5.RDS')
+)
+
+```
+
+Convert data to SingleCellExperiment object, modify expression matrices to contain all detected genes:
+
+```{r}
+amp_list_sc <- lapply(amp_list, function(x) {
+  x$celltype <- as.character(Idents(x))
+  x <- as.SingleCellExperiment(x)
+  x <- x[rowSums(assay(x, 'counts')) > 0, colSums(assay(x, 'counts')) >
+           0]
+  return(x)
+})
+
+detected_features <- Reduce(union, lapply(amp_list_sc, function(x) {
+  x <- rownames(x)
+  return(x)
+}))
+
+intersect_features <-
+  Reduce(intersect, lapply(amp_list_sc, function(x) {
+    x <- rownames(x)
+    return(x)
+  }))
+
+max_cells <- max(sapply(amp_list_sc, ncol))
+
+specific_mat <-
+  matrix(rep_len(0, length(
+    setdiff(detected_features, intersect_features)
+  ) * max_cells), ncol = max_cells)
+rownames(specific_mat) <-
+  setdiff(detected_features, intersect_features)
+
+amp_list_sc_full <- lapply(amp_list_sc, function(x) {
+  new_sc_counts <-
+    rbind(assay(x, 'counts'),
+          specific_mat[setdiff(rownames(specific_mat), rownames(x)), 1:ncol(x)])
+  new_sc_counts <- new_sc_counts[detected_features, ]
+  new_sc <- SingleCellExperiment(assays = list(counts = new_sc_counts))
+  colData(new_sc) <- colData(x)
+  return(new_sc)
+})
+
+amp_list_full_stats <- sapply(amp_list_sc_full, function(x) {
+  return(c(
+    'cells' = ncol(x),
+    'genes' = nrow(x),
+    'total_count' = sum(rowSums(assay(x, 'counts')))
+  ))
+}) %>% as.data.frame %>%  mutate(total = rowSums(.))
+
+amp_list_sc_full <- lapply(names(amp_list_sc_full), function(x) {
+  sce <- amp_list_sc_full[[x]]
+  colnames(sce) <- paste0(colnames(sce), '_', x)
+  colData(sce) <-
+    colData(sce)[, c("nCount_RNA", "nFeature_RNA", "celltype")]
+  sce$stage <- x
+  return(sce)
+})
+
+knitr::kable(amp_list_full_stats, caption = 'Full data stats')
+
+```
+
+Normalize all stages:
+
+```{r}
+amp_list_sc_full <-
+  multiBatchNorm(amp_list_sc_full, normalize.all = TRUE)
+
+amp_sc_merged <- Reduce(cbind, amp_list_sc_full)
+```
+
+# Visualise unintegrated data
+
+```{r}
+amp_sc_merged <- runPCA(amp_sc_merged)
+percent.var <- attr(reducedDim(amp_sc_merged), "percentVar")
+#plot(percent.var, xlab="PC", ylab="Variance explained (%)")
+amp_sc_merged <- runUMAP(amp_sc_merged, dimred = 'PCA', n_dimred = 1:15)
+amp_sc_merged$stage <-
+  factor(amp_sc_merged$stage, levels = c('G4', 'N0', 'N2', 'N5'))
+plotReducedDim(amp_sc_merged, 'UMAP', colour_by = 'stage', )+
+  ggtitle('All timepoints unintegrated UMAP')
+```
+
+# Integration
+
+Correct (integrate) normalized data:
+
+```{r}
+amp_merged_sc_int <-
+  correctExperiments(amp_list_sc_full[4:1], correct.all = TRUE)
+amp_merged_sc_int$stage <-
+  factor(amp_merged_sc_int$stage, levels = c('G4', 'N0', 'N2', 'N5'))
+
+### Not setting RNG parameters here (slows down the calculation),
+### UMAP is used for diagnostics puroposes only.
+### Original UMAP coordinates used in the
+### study are part of the Cell_metadata.csv table.
+
+amp_merged_sc_int <-
+  runUMAP(amp_merged_sc_int, dimred = 'corrected', n_dimred = 1:30)
+```
+
+# Visualise integrated data
+
+```{r}
+
+plotReducedDim(amp_merged_sc_int, 'UMAP', colour_by = 'stage')+
+  ggtitle('All timepoints integrated UMAP')
+```
+
+
+Save data:
+
+```{r}
+saveRDS(amp_merged_sc_int, 'output/amp_merged_sc_int.RDS')
+```
+
+
+***Session Info***
+
+```{r}
+sessionInfo()
+```

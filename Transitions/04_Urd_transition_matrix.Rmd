@@ -1,0 +1,194 @@
+---
+title: "Kozmikova 2023 Amphioxus Head Pseudotime and Transitions"
+author: "Jan Kubovciak, Institute of Molecular Genetics of the Czech Academy of Sciences"
+output:
+  pdf_document:
+    number_sections: false
+    toc: true
+    df_print: paged
+---
+
+last updated: `r Sys.time()`
+
+```{r setup_glob, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = TRUE,
+  cache = FALSE,
+  fig.height = 4,
+  fig.width = 7,
+  cache.lazy = FALSE
+)
+library(ggplot2)
+library(plotly)
+library(URD)
+library(Matrix)
+library(uwot)
+library(Seurat)
+library(batchelor)
+library(scater)
+library(dplyr)
+source('./_functions.r')
+dir.create('./output/', showWarnings = FALSE)
+verbose_urd <- FALSE
+
+```
+
+# Preprocess
+
+Load integrated SingleCellExperiment object:
+
+```{r}
+amp_merged_sc_int<-readRDS('./output/amp_merged_sc_int.RDS')
+```
+
+
+Read in Cellrank annotation with Cytotrace pseudotime:
+
+```{r}
+cr_ann<-read.csv('output/adata.obs.csv')
+
+```
+
+
+Load data and create URD object using integrated data:
+
+```{r}
+# Using modified createURD() function to allow for
+# MNN corrected values to be used as norm.data. See _functions.r.
+
+amp_u <-
+  createURD_nn(
+    count.data = as.matrix(assay(amp_merged_sc_int, 'counts')),
+    norm.data = as.matrix(assay(amp_merged_sc_int, 'reconstructed')),
+    meta = data.frame(as.data.frame(colData(amp_merged_sc_int)),
+                      row.names = colnames(amp_merged_sc_int)),
+    min.cells = 0,
+    min.genes = 0,
+    min.counts = 0,
+    gene.max.cut = Inf
+  )
+
+amp_u@group.ids$stage = amp_u@meta$stage
+
+```
+
+Calculate variable genes in each stage:
+
+```{r}
+stages <- sort(unique(amp_u@group.ids$stage))
+var.by.stage <- lapply(stages, function(n) {
+  findVariableGenes(
+    amp_u,
+    cells.fit = cellsInCluster(amp_u, "stage", n),
+    set.object.var.genes = F,
+    diffCV.cutoff = 0.5,
+    mean.min = .005,
+    mean.max = 100,
+    main.use = n,
+    do.plot = T
+  )
+})
+var.genes <- sort(unique(unlist(var.by.stage)))
+```
+
+Replace TSNE with UMAP coordinates calculated before:
+
+```{r}
+amp_u@var.genes <- var.genes
+amp_u <- calcPCA(amp_u)
+#pcSDPlot(amp_u)
+amp_u <- calcTsne(object = amp_u)
+
+amp_u@tsne.y$tSNE1 <- reducedDim(amp_merged_sc_int, 'UMAP')[, 1]
+amp_u@tsne.y$tSNE2 <- reducedDim(amp_merged_sc_int, 'UMAP')[, 2]
+colnames(amp_u@tsne.y) <- c('UMAP1', 'UMAP2')
+
+plotDim_mod(amp_u, "stage", plot.title = "UMAP: Stage")
+```
+
+# Calculate diffusion map
+
+```{r,warning=FALSE}
+# Using modified calcDM() function to save less DM components and
+# allow to set n_pcs parameter. See _functions.r.
+
+### Global sigma 0.15 based on destiny's auto estimation and
+### inspection of resulting diffusion maps
+### during pilot runs of the analysis.
+
+amp_u <-
+  calcDM_mod(amp_u, sigma = 0.15, knn = sqrt(ncol(amp_u@count.data)))
+
+# Optional: check diffusion map loadings:
+
+# plotDimArray(
+#   amp_u,
+#   reduction.use = "dm",
+#   dims.to.plot = 1:20,
+#   label = "stage",
+#   plot.title = "",
+#   legend = F,
+#   outer.title = 'Diffusion map loadings by stage'
+# )
+
+```
+
+# Calculate pseudotime 
+
+Calculate URD pseudotime and show its distribution:
+
+```{r}
+# select root cells by CytoTRACE pseudotime calculated with 03_Cytotrace_pseudotime.py.
+root.cells <-
+  cr_ann[cr_ann$ct_pseudotime < 0.15 & cr_ann$stage == 'G4', 'X']
+
+amp_u.floods <- floodPseudotime(
+    amp_u,
+    root.cells = root.cells,
+    n = 100,
+    minimum.cells.flooded = 2,
+    verbose = verbose_urd
+  )
+
+amp_u <- floodPseudotimeProcess(amp_u, amp_u.floods, floods.name = "pseudotime")
+
+pseudotimePlotStabilityOverall(amp_u)
+plotDim_mod(amp_u, "pseudotime", plot.title = "UMAP with pseudotime")
+plotDists(amp_u, "pseudotime", "stage", plot.title = "Pseudotime by stage")
+```
+
+# Create transition matrix
+
+```{r}
+
+amp_u.ptlogistics <-pseudotimeDetermineLogistic(
+    amp_u,
+    "pseudotime",
+    optimal.cells.forward = 20,
+    max.cells.back = 40,
+    do.plot = FALSE
+  )
+
+# Bias the transition matrix according to pseudotime
+amp_u.biased.tm <-as.matrix(
+    pseudotimeWeightTransitionMatrix(amp_u, "pseudotime",
+                                     logistic.params = amp_u.ptlogistics)
+  )
+
+```
+
+Save objects
+
+```{r}
+saveRDS(amp_u,'output/amp_u_MNN.RDS')
+saveRDS(amp_u.biased.tm,'output/amp_u_TM.RDS')
+```
+
+
+***Session Info***
+
+```{r index_7}
+sessionInfo()
+```
