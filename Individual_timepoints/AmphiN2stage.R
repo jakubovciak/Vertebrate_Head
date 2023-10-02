@@ -14,7 +14,7 @@ library(ggplot2)
 AmphiN2stage.data <-Read10X(data.dir = "../10X_matrices/N2/filtered_feature_bc_matrix/")
 
 # read gene id conversion table
-gene_map <-read.csv('../10X_matrices/conversion-table-v-8.csv', row.names = 1)
+gene_map <-read.csv('../10X_matrices/gene_id_conversion_table.csv', row.names = 1)
 
 # replace BraFlo100 gene id with BraLan3 name where possible
 rownames(AmphiN2stage.data) <-
