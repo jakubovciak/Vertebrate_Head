@@ -1,6 +1,6 @@
 # Vertebrate Head Evolution Analysis
 
-## Prefix
+## Introduction
 
 This repository contains scripts used for analysis of single cell RNA-Seq data presented in Kozmikova 2023 paper. Data consist of four 10X datasets, each representing selected stage of Amphioxus *(Branchiostoma floridae)* embryonic development. Aim of the analyses is to annotate the data and investigate developmental trajectories (transitions) across the identified celltypes and stages (timepoints) according to the hypotheses presented in the paper.
 
