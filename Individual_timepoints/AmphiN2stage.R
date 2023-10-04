@@ -2,9 +2,6 @@
 #### Script used for analysis of 10X matrices
 #### Stage N2
 
-# uncomment and set working directory to repository path if run within RStudio:
-# setwd('path/to/downloaded/repository')
-
 # load prerequisities
 library(Seurat)
 library(patchwork)

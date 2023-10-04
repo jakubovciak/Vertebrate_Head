@@ -12,9 +12,9 @@ Main body of the analyses is written in R with addition of some Python. The anno
 
 ## Analyses description
 
-Canonical steps of Seurat workflow were used to load, filter, normalize and cluster expression matrices of individual timepoints (provided here). Clusters were annotated based on known sets of markers in supervised manner, see the paper for details. Scripts describing timepoints analyses generate graphical output and are meant to be run interactively using e.g. RStudio or other R compatible IDE. They also output final Seurat objects in RDS format, which are used for downstream transitions analysis. We present the transitions analysis scripts in [R Markdown format](https://bookdown.org/yihui/rmarkdown/basics.html) (with exception of some technical steps) for smoother readability and execution.
+Canonical steps of Seurat workflow were used to load, filter, normalize and cluster expression matrices of individual timepoints (provided here). Clusters were annotated based on known sets of markers in supervised manner, see the paper for details. Scripts describing timepoints analyses generate graphical output and are meant to be run interactively using e.g. RStudio or other R compatible IDE. They also output final Seurat objects in RDS format, which are used for downstream transitions analysis. We present the transitions analysis scripts in [R Markdown format](https://bookdown.org/yihui/rmarkdown/basics.html) (with exception of some technical steps) for smoother readability and execution with e.g. `rmarkdown::render('01_Integration.Rmd')`.
 
-All script files have their description in the header with some hints where appropriate. Paths are set as relative, meaning it is possible to run the code from the downloaded repository directly.
+All script files have their description in the header with some hints where appropriate. Paths are set as relative, meaning the code can be run from the downloaded repository directly, with R script's working directory being set to the same path as the files.
 
 ## Content details
 

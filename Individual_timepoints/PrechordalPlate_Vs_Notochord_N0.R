@@ -2,9 +2,6 @@
 #### Script used for analysis of 10X matrices
 #### Prechordal plate vs Notochord markers
 
-# uncomment and set working directory to repository path if run within RStudio:
-# setwd('path/to/downloaded/repository')
-
 # load prerequisities
 library(Seurat)
 library(patchwork)
@@ -15,7 +12,7 @@ AmphiN0stage <- readRDS("../timepoints_rds/Amp_N0.RDS")
 
 DimPlot(AmphiN0stage, reduction = "umap", pt.size = 3)
 
-# Compute differential expression analysis between Prechordal Plate or Notochord and the rest of cells
+# Compute differential expression analysis between Prechordal Plate and Notochord and the rest of cells
 
 pp_vs_all_dea <-
   FindMarkers(
