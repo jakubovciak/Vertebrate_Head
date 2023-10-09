@@ -1,8 +1,4 @@
----
-output:
-  pdf_document: default
-  html_document: default
----
+
 # Markos et al 2023: Vertebrate Head Evolution Analysis
 
 ## Introduction
