@@ -5,7 +5,7 @@
 
 This repository contains scripts used for analysis of single cell RNA-Seq data presented in Markos et al 2023[^1]. Data consist of four 10X datasets, each representing selected stage of Amphioxus *(Branchiostoma floridae)* embryonic development. Aim of the analyses is to annotate the data and investigate developmental trajectories (transitions) across the identified celltypes and stages (timepoints) according to the hypotheses presented in the paper.
 
-*Important: Purpose of the repository is to serve as extended data accompanying the manuscript, we do not wish to update the code except for requirements raised during the review process. Feel free to fork the repository, extend or improve the code and acknowledge where appropriate.*
+*Important: Purpose of the repository is to serve as extended data accompanying the manuscript, we do not wish to update the code except for requirements raised during the review process.*
 
 ## Software Prerequisites
 
