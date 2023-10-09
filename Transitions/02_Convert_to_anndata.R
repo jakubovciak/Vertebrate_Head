@@ -1,4 +1,4 @@
-#### Kozmikova 2023 Amphioxus Head
+#### Markos et al 2023
 #### Conversion of integrated SingleCellExperiment object to h5ad for analysis with python
 #### Can be run from bash e.g. by `Rscript 02_Convert_to_anndata.R`
 

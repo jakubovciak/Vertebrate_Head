@@ -1,4 +1,4 @@
-#### Kozmikova 2023 Amphioxus Head
+#### Markos et al 2023
 #### Script used for analysis of 10X matrices
 #### Stage N2
 

@@ -1,5 +1,5 @@
 ---
-title: "Kozmikova 2023 Amphioxus Head Pseudotime and Transitions"
+title: "Markos et al 2023 Pseudotime and Transitions"
 author: "Jan Kubovciak, Institute of Molecular Genetics of the Czech Academy of Sciences"
 output:
   pdf_document:

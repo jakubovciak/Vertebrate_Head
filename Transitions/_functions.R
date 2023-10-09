@@ -1,4 +1,4 @@
-#### Kozmikova 2023 Amphioxus Head
+#### Markos et al 2023
 #### functions used in transitions workflow
 
 

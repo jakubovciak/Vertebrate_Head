@@ -1,4 +1,4 @@
-#### Kozmikova 2023 Amphioxus Head
+#### Markos et al 2023
 #### CytoTRACE pseudotime calculation based on integrated data
 #### Can be run from bash by `python 03_Cytotrace_pseudotime.py` (with designated conda environment activated!)
 
