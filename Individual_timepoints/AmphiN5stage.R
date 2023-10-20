@@ -275,6 +275,14 @@ pl_n5_dot_gset<-DotPlot(
 
 pl_n5_dot_gset
 
+# save Figure1 plots
+dir.create('../Results/', showWarnings = FALSE)
+
+pdf('../Results/Fig1_N5.pdf',width = 10,height = 7)
+pl_n5_umap_annot_col
+pl_n5_dot_gset
+dev.off()
+
 # save Seurat object as RDS
 dir.create('../timepoints_rds/', showWarnings = FALSE)
 saveRDS(AmphiN5stage, file = "../timepoints_rds/Amp_N5.RDS")

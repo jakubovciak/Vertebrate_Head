@@ -147,7 +147,8 @@ pl_n2_umap_annot<-DimPlot(
   reduction = "umap",
   pt.size = 3,
   order = TRUE
-) + NoLegend() + ggtitle('N2 UMAP annotated')
+) + ggtitle('N2 UMAP annotated')
+
 pl_n2_umap_annot
 
 
@@ -228,6 +229,14 @@ pl_n2_dot_gset<-DotPlot(
 ) + RotatedAxis()+ NoLegend() + ggtitle('N2 selected genes expression')
 
 pl_n2_dot_gset
+
+# save Figure1 plots
+dir.create('../Results/', showWarnings = FALSE)
+
+pdf('../Results/Fig1_N2.pdf',width = 10,height = 7)
+pl_n2_umap_annot
+pl_n2_dot_gset
+dev.off()
 
 # save Seurat object as RDS
 dir.create('../timepoints_rds/', showWarnings = FALSE)

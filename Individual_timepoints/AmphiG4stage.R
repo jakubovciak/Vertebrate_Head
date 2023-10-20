@@ -235,9 +235,17 @@ pl_g4_dot_gset<-DotPlot(
   col.max = 40,
   dot.min = 0,
   dot.scale = 10
-) + RotatedAxis() + ggtitle('G4 selected genes expression')
+) + RotatedAxis() + NoLegend() + ggtitle('G4 selected genes expression')
 
 pl_g4_dot_gset
+
+# save Figure1 plots
+dir.create('../Results/', showWarnings = FALSE)
+
+pdf('../Results/Fig1_G4.pdf',width = 10,height = 7)
+pl_g4_umap_annot_col
+pl_g4_dot_gset
+dev.off()
 
 # save Seurat object as RDS
 dir.create('../timepoints_rds/', showWarnings = FALSE)
