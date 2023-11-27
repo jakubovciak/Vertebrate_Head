@@ -27,7 +27,7 @@ library(scater)
 library(dplyr)
 library(igraph)
 library(openxlsx)
-source('./_functions.r')
+source('./_functions.R')
 
 ```
 
