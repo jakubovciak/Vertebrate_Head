@@ -29,7 +29,7 @@ library(Seurat)
 library(batchelor)
 library(scater)
 library(dplyr)
-source('./_functions.r')
+source('./_functions.R')
 dir.create('./output/', showWarnings = FALSE)
 verbose_urd <- FALSE
 
