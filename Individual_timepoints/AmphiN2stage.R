@@ -168,7 +168,7 @@ AmphiN2stage@active.ident <-
       "LateralPlateMesoderm",
       "Somites",
       "PosteriorSomites",
-      "PosteriorNotochord"
+      "Unidentified"
     )
   )
 
