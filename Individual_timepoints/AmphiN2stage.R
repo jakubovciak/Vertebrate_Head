@@ -125,7 +125,7 @@ new.cluster.ids <-
     "PosteriorSomites",
     "AnteriorNeuralPlate",
     "Somites",
-    "PosteriorNotochord",
+    "Unidentified",
     "Somites",
     "PharyngealEndoderm",
     "Endoderm",
