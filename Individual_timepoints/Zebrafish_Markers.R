@@ -26,9 +26,9 @@ subset_N0@active.ident <- factor(subset_N0@active.ident, levels=c("AnteriorEndod
 subset_G4@active.ident <- factor(subset_G4@active.ident, levels=c("AnteriorMesendoderm","PreaxialMesendoderm","AxialMesendoderm"))
 subset_N2@active.ident <- factor(subset_N2@active.ident, levels=c("PharyngealEndoderm","PrechordalMesoderm","Notochord"))
 
-# Zebrafish Prechordal markers
+# Figure 2-A: Zebrafish Prechordal plate markers
 
-zebra_prechordal_markers<-c("Chordin","Goosecoid","FoxA1","Id2","Otx","Fz5/8","Dkk1/2/4","Rnd3","sFRP2-like","Six3/6","Blimp","Krt75","Cd63","Nmt2","Bambi","Bmp2/4","Xbp1","Ism1","Timp4","Bhlha15","Ripply2")
+zebra_prechordal_markers<-c("Chordin","Goosecoid","FoxA1","Id2","Otx","Fz5/8","Dkk1/2/4","Rnd3","Sfrp2-like","Six3/6","Blimp","Krt75","Cd63","Nmt2","Bambi","Bmp2/4","Xbp1","Ism1","Timp4","Bhlha15","Ripply2")
 
 pl_g4_dot_zebra_p <-
   DotPlot(
@@ -67,9 +67,9 @@ pl_g4_dot_zebra_p
 pl_n0_dot_zebra_p
 pl_n2_dot_zebra_p
 
-# Zebrafish Notochord markers
+# Figure 2-B: Zebrafish Notochord markers
 
-zebra_noto_markers<-c("Chordin","FoxD","Admp","Id2","FoxA1","Mnx","Brachyury1","Brachyury2","Twist","Cdkn1B/C","Epha","Sall1","Ppp1r14B/C","Shh","Plod1/2","Dag1","P4ha1","Col2A1")
+zebra_noto_markers<-c("Chordin","FoxD","Admp","Id2","FoxA1","Mnx","Brachyury1","Brachyury2","Twist","Cdkn1b/C","Epha","Sall1","Ppp1r14b/C","Shh","Plod1/2","Dag1","P4ha1","Col2a1")
 
 pl_n0_dot_zebra_noto <-
   DotPlot(
