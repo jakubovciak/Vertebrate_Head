@@ -8,6 +8,8 @@
 # Convert integrated data to h5ad format for AnnData input.
 
 library(zellkonverter)
+library(Rhdf5lib)
+library(HDF5Array)
 
 amp_int <- readRDS('output/amp_merged_sc_int.RDS')
 
