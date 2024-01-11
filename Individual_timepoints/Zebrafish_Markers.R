@@ -30,6 +30,9 @@ subset_N2@active.ident <- factor(subset_N2@active.ident, levels=c("PharyngealEnd
 
 zebra_prechordal_markers<-c("Chordin","Goosecoid","FoxA1","Id2","Otx","Fz5/8","Dkk1/2/4","Rnd3","Sfrp2-like","Six3/6","Blimp","Krt75","Cd63","Nmt2","Bambi","Bmp2/4","Xbp1","Ism1","Timp4","Bhlha15","Ripply2")
 
+zebra_prechordal_markers_focus<-c("Ism1","Timp4","Bhlha15","Ripply2")
+
+
 pl_g4_dot_zebra_p <-
   DotPlot(
     subset_G4,
@@ -63,9 +66,46 @@ pl_n2_dot_zebra_p <-
     dot.scale = 5
   ) + NoLegend() + RotatedAxis() + ggtitle('N2 Zebrafish Prechordal Markers')
 
-pl_g4_dot_zebra_p
-pl_n0_dot_zebra_p
+pl_g4_dot_zebra_p /
+pl_n0_dot_zebra_p /
 pl_n2_dot_zebra_p
+
+pl_g4_dot_zebra_p_focus <-
+  DotPlot(
+    subset_G4,
+    features = zebra_prechordal_markers_focus,
+    cols = c('snow2', 'red1'),
+    col.min = -2,
+    col.max = 10,
+    dot.min = 0,
+    dot.scale = 5
+  ) + NoLegend() + RotatedAxis() + ggtitle('G4 Zebrafish Prechordal Markers')
+
+pl_n0_dot_zebra_p_focus <-
+  DotPlot(
+    subset_N0,
+    features = zebra_prechordal_markers_focus,
+    cols = c('snow2', 'red1'),
+    col.min = -2,
+    col.max = 10,
+    dot.min = 0,
+    dot.scale = 5
+  ) + NoLegend() + RotatedAxis() + ggtitle('N0 Zebrafish Prechordal Markers')
+
+pl_n2_dot_zebra_p_focus <-
+  DotPlot(
+    subset_N2,
+    features = zebra_prechordal_markers_focus,
+    cols = c('snow2', 'red1'),
+    col.min = -2,
+    col.max = 10,
+    dot.min = 0,
+    dot.scale = 5
+  ) + NoLegend() + RotatedAxis() + ggtitle('N2 Zebrafish Prechordal Markers')
+
+pl_g4_dot_zebra_p_focus /
+pl_n0_dot_zebra_p_focus /
+pl_n2_dot_zebra_p_focus
 
 # Figure 2-B: Zebrafish Notochord markers
 
@@ -93,7 +133,7 @@ pl_n2_dot_zebra_noto <-
     dot.scale = 5
   ) + NoLegend() + RotatedAxis() + ggtitle('N2 Zebrafish Notochord Markers')
 
-pl_n0_dot_zebra_noto
+pl_n0_dot_zebra_noto /
 pl_n2_dot_zebra_noto
 
 
