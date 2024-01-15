@@ -32,15 +32,19 @@ library(dplyr)
 source('./_functions.R')
 dir.create('./output/', showWarnings = FALSE)
 verbose_urd <- FALSE
-
+RECALC_TM<-FALSE # If FALSE, only URD object is created, but no transition probabilities are computed for time saving purposes.
 ```
 
+
 # Preprocess
+
+Computing transition probabilities: `r RECALC_TM`
 
 Load integrated SingleCellExperiment object:
 
 ```{r}
 amp_merged_sc_int<-readRDS('./output/amp_merged_sc_int.RDS')
+
 ```
 
 
@@ -110,16 +114,16 @@ plotDim_mod(amp_u, "stage", plot.title = "UMAP: Stage")
 
 # Calculate diffusion map
 
-```{r,warning=FALSE}
+```{r,warning=FALSE,eval=RECALC_TM}
 # Using modified calcDM() function to save less DM components and
 # allow to set n_pcs parameter. See _functions.r.
 
-### Global sigma 0.15 based on destiny's auto estimation and
+### Global sigma 0.182 based on destiny's auto estimation and
 ### inspection of resulting diffusion maps
 ### during pilot runs of the analysis.
 
 amp_u <-
-  calcDM_mod(amp_u, sigma = 0.15, knn = sqrt(ncol(amp_u@count.data)))
+  calcDM_mod(amp_u, sigma = 0.182, knn = sqrt(ncol(amp_u@count.data)))
 
 # Optional: check diffusion map loadings:
 
@@ -139,7 +143,7 @@ amp_u <-
 
 Calculate URD pseudotime and show its distribution:
 
-```{r}
+```{r,eval=RECALC_TM}
 # select root cells by CytoTRACE pseudotime calculated with 03_Cytotrace_pseudotime.py.
 root.cells <-
   cr_ann[cr_ann$ct_pseudotime < 0.15 & cr_ann$stage == 'G4', 'X']
@@ -161,7 +165,7 @@ plotDists(amp_u, "pseudotime", "stage", plot.title = "Pseudotime by stage")
 
 # Create transition matrix
 
-```{r}
+```{r,eval=RECALC_TM}
 
 amp_u.ptlogistics <-pseudotimeDetermineLogistic(
     amp_u,
@@ -183,7 +187,10 @@ Save objects
 
 ```{r}
 saveRDS(amp_u,'output/amp_u_MNN.RDS')
-saveRDS(amp_u.biased.tm,'output/amp_u_TM.RDS')
+if(RECALC_TM){
+  saveRDS(amp_u.biased.tm,'output/amp_u_TM.RDS')
+}
+
 ```
 
 

@@ -259,10 +259,10 @@ igraph2ggplot <- function(layout_df = NULL, # graph layout object constructed us
                           graph_o = NULL, # igraph object
                           width_limit_min = 0, # remove edges with lower weight than width_limit_min
                           scale_by_node = FALSE, # scale edge width by each node
-                          keep_max_to = FALSE, # prevent disconnecting the graph
-                          filter_skip = FALSE, # remove edges skipping a timepoint
+                          keep_max_to = FALSE, # prevent disconnecting the graph by retaining the most probable edge to the node
+                          allow_direction=c(0,1,2), # keep only edges connecting nodes with specified difference in time
                           return_data = FALSE, # return data frame describing the graph
-                          scale_coords = TRUE, # scale the node coordinates to c(-1,1)
+                          scale_coords = FALSE, # scale the node coordinates to c(-1,1)
                           arrow_length = 0.07, # length of edge arrow
                           arrow_offset = 0.375, # space between node coordinate and the arrow tip
                           max_width = 4, # upper limit of edge width scale
@@ -330,11 +330,11 @@ igraph2ggplot <- function(layout_df = NULL, # graph layout object constructed us
   # keep edges pointing to the next timepoint
   graph_df <- filter(graph_df, to_time > from_time)
   
-  # remove edges skipping a timepoint (optional)
-  if (filter_skip) {
-    graph_df <-
-      filter(graph_df, (as.numeric(to_time) - as.numeric(from_time)) == 1)
-  }
+  # # remove edges skipping a timepoint (optional)
+  # if (filter_skip) {
+  #   graph_df <-
+  #     filter(graph_df, (as.numeric(to_time) - as.numeric(from_time)) == 1)
+  # }
   
   # scale transition probabilities for each node separately (optional)
   
@@ -350,11 +350,18 @@ igraph2ggplot <- function(layout_df = NULL, # graph layout object constructed us
   
   # identify edges with highest probability per node to prevent disconnecting the graph
   
-  top_to_df <- group_by(graph_df, to) %>%
-    filter(weight == max(weight)) %>%
-    as.data.frame()
+  if(keep_max_to){
+    top_to_df<-filter(graph_df,(as.numeric(to_time)-as.numeric(from_time))>0) %>% 
+      group_by(to) %>%
+      filter(weight==max(weight)) %>% 
+      as.data.frame()
+    
+    rownames(top_to_df)<-paste0(top_to_df$from,'_to_',top_to_df$to)
+  }
   
-  rownames(top_to_df) <- paste0(top_to_df$from, '_to_', top_to_df$to)
+  if(!is.null(allow_direction)){
+    graph_df<-filter(graph_df,(as.numeric(to_time)-as.numeric(from_time))%in%allow_direction)
+  }
   
   # remove edges with values lower than selected threshold
   
@@ -362,10 +369,11 @@ igraph2ggplot <- function(layout_df = NULL, # graph layout object constructed us
   
   # keep edges with highest probability per node to prevent disconnecting the graph (optional)
   
-  if (keep_max_to) {
-    graph_df <-
-      rbind(graph_df, top_to_df[!rownames(top_to_df) %in% rownames(graph_df), ])
+  if(keep_max_to){
+    top_to_df<-filter(top_to_df,!to%in%(graph_df$to[(as.numeric(graph_df$to_time)-as.numeric(graph_df$from_time))==1]))
+    graph_df<-rbind(graph_df,top_to_df[!rownames(top_to_df)%in%rownames(graph_df),])
   }
+
   
   # create plot object
   

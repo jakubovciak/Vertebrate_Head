@@ -29,20 +29,28 @@ library(igraph)
 library(openxlsx)
 source('./_functions.R')
 
+RELOAD_TM=TRUE # If TRUE, provided transition matrix is used rather than the computed one for time saving purposes.
+
 ```
 
 # Preprocess
 
-Load data and select Ectoderm ELAVL4-positive cells:
+Load data and select Ectoderm Elav-positive cells:
+
+Using provided precomputed transition probabilities: `r RELOAD_TM`
 
 ```{r}
-tm <- readRDS('output/amp_u_TM.RDS')
+if(RELOAD_TM){
+  tm <- readRDS('../Results/tm_original.RDS')
+} else {
+  tm <- readRDS('output/amp_u_TM.RDS')
+}
+
 
 urd_o <- readRDS('output/amp_u_MNN.RDS')
 sc_int <- readRDS('output/amp_merged_sc_int.RDS')
-sc_int$elavl_plus <- assay(sc_int, 'logcounts')['ELAVL4', ] > 0
-urd_o@meta$celltype[urd_o@meta$celltype == 'Ectoderm' &
-                      urd_o@meta$stage == 'N0' & sc_int$elavl_plus] <- 'Ectoderm_elavl'
+sc_int$Elav_plus <- assay(sc_int, 'logcounts')['Elav', ] > 0
+urd_o@meta$celltype[urd_o@meta$celltype == 'Ectoderm' & sc_int$Elav_plus] <- 'Ectoderm_Elav'
 
 stages_used <- levels(urd_o@group.ids$stage)
 ```
@@ -78,6 +86,7 @@ gplot_stage <-
     layout_df = g_stage_layout,
     graph_o = g_stage,
     scale_by_node = TRUE,
+    allow_direction = c(1),
     max_width = 1.5,
     width_limit_min = 0.1,
     node_size = 4,
@@ -126,12 +135,23 @@ tm_celltype_stage_order <-
 Create graph from selected celltypes to show Crest and Prechordal Plate lineage:
 
 ```{r}
-crest_lineage<-c('Ectoderm_elavl_N0',
-                 'AnteriorNeuralPlate_N2',
-                 'LeftDiverticulum_N5',
-                 'Ectoderm_N5',
-                 'NeuralCrest-likeCells_N5',
-                 'AnteriorNeuralTube_N5')
+crest_lineage <-c(
+    "PMNCC_N5",
+    "MNCC-likeCells_N5",
+    "AntEctoderm_N5",
+    "Ectoderm_Elav_N5",
+    "Ectoderm_N5",
+    "AnteriorNeuralTube_N5",
+    "NeuralTube_N5",
+    "AnteriorNeuralPlate_N2",
+    "NeuralPlate_N2",
+    "NeuralPlate_N0",
+    "Ectoderm_N0",
+    "Ectoderm_Elav_N0",
+    "NeuralPlate_G4",
+    "Ectoderm_G4",
+    "Ectoderm_Elav_G4"
+  )
 
 pp_lineage<-c('Notochord_N5',
               'Notochord_N0',
@@ -223,7 +243,7 @@ gplot_pp <-
     width_limit_min = 0.9,
     scale_by_node = FALSE,
     max_width = 1.5,
-    filter_skip = TRUE,
+    allow_direction = c(1),
     arrow_offset = 0.05,
     arrow_length = 0.1,
     node_size = 4,
@@ -237,9 +257,10 @@ gplot_crest <-
   igraph2ggplot(
     layout_df = graph_crest_layout,
     graph_o = graph_crest_scaled,
-    keep_max_to = FALSE,
-    max_width = 1.5,
-    width_limit_min = 0.5,
+    keep_max_to = TRUE,
+    max_width = 1,
+    width_limit_min = 1.5,
+    allow_direction = c(1),
     scale_by_node = FALSE,
     arrow_offset = 0.05,
     arrow_length = 0.1,
