@@ -124,12 +124,6 @@ diag(tm_celltype_stage) <- 0
 
 tm_celltype_stage_scale <- scale(t(tm_celltype_stage))
 
-# create also matrix with order of probabilities
-tm_celltype_stage_order <-
-  sapply(1:ncol(tm_celltype_stage_scale), function(x) {
-    match(rownames(tm_celltype_stage_scale), names(sort(tm_celltype_stage_scale[, x], decreasing = TRUE)))
-  })
-
 ```
 
 Create graph from selected celltypes to show Crest and Prechordal Plate lineage:
@@ -281,7 +275,6 @@ write.xlsx(
     mat_raw = as.data.frame(signif(t(
       tm_celltype_stage_raw
     ), 5)),
-    mat_scale_order = as.data.frame(tm_celltype_stage_order),
     mat_scale_cols = as.data.frame(tm_celltype_stage_scale),
     mat_scale_rows = as.data.frame(t(scale(tm_celltype_stage)))
   ),
