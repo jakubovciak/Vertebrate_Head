@@ -1,4 +1,4 @@
-name: sc_trajectories
+name: ctk_pseudotime_env
 channels:
   - bioconda
   - conda-forge
