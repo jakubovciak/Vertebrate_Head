@@ -3,7 +3,7 @@ FROM bioconductor/bioconductor_docker:RELEASE_3_15
 LABEL name="Markos 2024 Transitions" \
     version=0.1 \
     maintainer="kubovcij@img.cas.cz" \
-    description="Data, code and software dependencies for Markos 2023 transitions analysis" \
+    description="Data, code and software dependencies for Markos 2024 transitions analysis" \
     license="MIT"
 
 
@@ -30,6 +30,8 @@ RUN Rscript -e "\
 	
 COPY Transitions/software/environment.yml /
 
+COPY SAMap/environment.yml /samap.yml
+
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py39_23.11.0-2-Linux-x86_64.sh \
     && mkdir /root/.conda \
     && bash Miniconda3-py39_23.11.0-2-Linux-x86_64.sh -b \
@@ -38,6 +40,8 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py39_23.11.0-2-Linux-x86
 RUN conda config --set ssl_verify false
 
 RUN conda env create -y -f environment.yml
+
+RUN conda env create -y -f samap.yml
 
 RUN conda init
 

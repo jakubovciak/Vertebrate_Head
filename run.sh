@@ -3,7 +3,7 @@
 set -e
 
 echo "
-Started annotation workflow...
+Started annotation workflow ...
 "
 
 Rscript R_demo.R
@@ -15,7 +15,7 @@ Finished annotation workflow, check figures in Results directory
 cd Transitions
 
 echo "
-Started celltype transitions workflow...
+Started celltype transitions workflow ...
 "
 
 Rscript -e "rmarkdown::render(input = '01_Integration.Rmd', output_dir = '../Results', clean = TRUE)"
@@ -37,3 +37,20 @@ Finished celltype transitions workflow, check rendered reports in Results direct
 "
 
 cd ..
+
+echo "
+Started SAMap workflow ...
+"
+
+conda deactivate
+
+conda activate SAMap
+
+cd SAMap/analysis
+
+sh ./run_combinations.sh
+sh ./run_1to1_comparisons.sh
+
+echo "
+Finished SAMap workflow, check rendered reports in individual folders
+"
