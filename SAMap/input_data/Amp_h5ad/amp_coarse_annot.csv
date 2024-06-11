@@ -1,0 +1,56 @@
+stage,celltype,coarse1,coarse2,celltype_correct
+G4,Anterior mesendoderm,Mesoderm,Mesoderm,AnteriorMesendoderm
+G4,Anterior ventral endoderm,Endoderm,Endoderm,VentralAnteriorMesendoderm
+G4,Axial mesendoderm,Mesoderm,Notochord,AxialMesendoderm
+G4,Ectoderm,Ectoderm,Ectoderm,Ectoderm
+G4,Lateral mesendoderm,Endoderm,Endoderm,LateralMesendoderm
+G4,Neural plate,Ectoderm,Neural,NeuralPlate
+G4,Posterior dorsal mesendoderm,Mesoderm,Mesoderm,PosteriorDorsalMesendoderm
+G4,Posterior ventral endoderm,Endoderm,Endoderm,VentralPosteriorMesendoderm
+G4,Preaxial mesendoderm,Mesoderm,Mesoderm,PreaxialMesendoderm
+G4,Unidentified,Unidentified,Unidentified,Unidentified
+N0,Anterior endoderm,Endoderm,Endoderm,AnteriorEndoderm
+N0,Dorsal blastopore lip,Mesoderm,Mesoderm,DorsalBlastoporeLip
+N0,Ectoderm,Ectoderm,Ectoderm,Ectoderm
+N0,Lateral endoderm,Endoderm,Endoderm,LateralEndoderm
+N0,Neural plate,Ectoderm,Neural,NeuralPlate
+N0,Notochord,Mesoderm,Notochord,Notochord
+N0,Paraxial mesoderm,Mesoderm,Mesoderm,ParaxialMesoderm
+N0,Prechordal plate,Mesoderm,Mesoderm,PrechordalPlate
+N0,Tallbud mesoderm,Mesoderm,Mesoderm,TailbudMesoderm
+N0,Unidentified,Unidentified,Unidentified,Unidentified
+N0,Ventral endoderm,Endoderm,Endoderm,VentralEndoderm
+N2,Anterior endoderm,Endoderm,Endoderm,AnteriorEndoderm
+N2,Anterior neural plate,Ectoderm,Neural,AnteriorNeuralPlate
+N2,Endoderm,Endoderm,Endoderm,Endoderm
+N2,Lateral plate mesoderm,Mesoderm,Mesoderm,LateralPlateMesoderm
+N2,Neural plate,Ectoderm,Ectoderm,NeuralPlate
+N2,Notochord,Mesoderm,Notochord,Notochord
+N2,Pharyngeal endoderm,Endoderm,Endoderm,PharyngealEndoderm
+N2,Posterior somites,Mesoderm,Mesoderm,PosteriorSomites
+N2,Prechordal mesoderm,Mesoderm,Mesoderm,PrechordalMesoderm
+N2,Somites,Mesoderm,Mesoderm,Somites
+N2,Tailbud mesoderm,Mesoderm,Mesoderm,TailbudMesoderm
+N2,Unidentifired ,Unidentified,Unidentified,Unidentified
+N5,Anterior ectoderm,Ectoderm,Ectoderm,AntEctoderm
+N5,Anterior neural tube,Ectoderm,Neural,AnteriorNeuralTube
+N5,Anterior notochord,Mesoderm,Notochord,AnteriorTipNotochord
+N5,Ectoderm,Ectoderm,Ectoderm,Ectoderm
+N5,Endostyle endoderm,Endoderm,Endoderm,Endostyle
+N5,HindGutEndoderm,Endoderm,Endoderm,HindGutEndoderm
+N5,Left diverticulum,Endoderm,Endoderm,LeftDiverticulum
+N5,LPM1,Mesoderm,Mesoderm,LPM1
+N5,LPM2,Mesoderm,Mesoderm,LPM2
+N5,Midgut,Endoderm,Endoderm,MidGut
+N5,MNNC-likeCells,Ectoderm,Neural,MNCC-likeCells
+N5,Neuraltube,Ectoderm,Neural,NeuralTube
+N5,Notochord,Mesoderm,Notochord,Notochord
+N5,PharyngealAntEndo1,Endoderm,Endoderm,PharyngealAntEndo1
+N5,PharyngealAntEndo2,Endoderm,Endoderm,PharyngealAntEndo2
+N5,Posterior pharyngeal endoderm,Endoderm,Endoderm,PharyngealPostDorsalEndo
+N5,Posterior pharyngeal endoderm,Endoderm,Endoderm,PharyngealPostVentralEndo
+N5,PMNNC-like,Ectoderm,Neural,PMNCC
+N5,Somites,Mesoderm,Mesoderm,Somites
+N5,Tailbud mesoderm,Mesoderm,Mesoderm,TailbudMesoderm
+N5,Unidentified,Unidentified,Unidentified,Unidentified
+N5,Unidentified pharyngeal endoderm,Endoderm,Endoderm,UnidentifiedPharyngealEndo

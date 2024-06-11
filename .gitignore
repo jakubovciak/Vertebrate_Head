@@ -13,6 +13,9 @@
 .Rproj.user/
 *.Rproj
 
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
 # rendered Rmds
 *.pdf
 !README.pdf
@@ -31,6 +34,13 @@ renv/
 .DS_Store
 
 # output
+PP_markers_homology_amp_all_zf_f_5to12.csv
+Mapping_table*.csv
+*.h5ad
+*.pkl
+*.html
 timepoints_rds/
 output/
 figures/
+
+

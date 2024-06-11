@@ -1,0 +1,6 @@
+stage_zebra,9hpf
+stage_amp,N0
+path_zebra,../../input_data/zf_farrell9_ZF90.h5ad
+path_amp,../../input_data/Amp_h5ad/Amp_N0.h5ad
+sankey_fine_t,0.25
+sankey_coarse_t,0.5
