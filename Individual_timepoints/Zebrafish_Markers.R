@@ -111,6 +111,17 @@ pl_n2_dot_zebra_p_focus
 
 zebra_noto_markers<-c("Chordin","FoxD","Admp","Id2","FoxA1","Mnx","Brachyury1","Brachyury2","Twist","Cdkn1b/C","Epha","Sall1","Ppp1r14b/C","Shh","Plod1/2","Dag1","P4ha1","Col2a1")
 
+pl_g4_dot_zebra_noto <-
+  DotPlot(
+    subset_G4,
+    features = zebra_noto_markers,
+    cols = c('snow2', 'red1'),
+    col.min = -2,
+    col.max = 10,
+    dot.min = 0,
+    dot.scale = 5
+  ) + NoLegend() + RotatedAxis() + ggtitle('G4 Zebrafish Notochord Markers')
+
 pl_n0_dot_zebra_noto <-
   DotPlot(
     subset_N0,
@@ -133,6 +144,7 @@ pl_n2_dot_zebra_noto <-
     dot.scale = 5
   ) + NoLegend() + RotatedAxis() + ggtitle('N2 Zebrafish Notochord Markers')
 
+pl_g4_dot_zebra_noto /
 pl_n0_dot_zebra_noto /
 pl_n2_dot_zebra_noto
 
