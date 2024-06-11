@@ -12,7 +12,7 @@ library(scran)
 
 coarse_annot<-read.csv('amp_coarse_annot.csv')
 
-amp_rds<-list.files('../../../Vertebrate_Head/timepoints_rds',full.names = TRUE)
+amp_rds<-list.files('../../../timepoints_rds',full.names = TRUE)
 
 for (amp_path in amp_rds) {
   
