@@ -1,4 +1,4 @@
-#### Markos et al 2023
+#### Markos et al 2024
 #### Script used for analysis of 10X matrices
 #### Stage G4
 
@@ -6,6 +6,7 @@
 library(Seurat)
 library(patchwork)
 library(ggplot2)
+set.seed(10)
 
 # Data load ####
 AmphiG4stage.data <-Read10X(data.dir = "../10X_matrices/G4/filtered_feature_bc_matrix/")
@@ -195,15 +196,18 @@ pl_g4_dot_gset<-DotPlot(
   col.min = -2,
   col.max = 40,
   dot.min = 0,
-  dot.scale = 10
-) + RotatedAxis() + NoLegend() + ggtitle('G4 selected genes expression')
-
+  dot.scale = 8
+) + RotatedAxis() + 
+  ggtitle('G4 selected genes expression') + 
+  theme(axis.text.x = element_text(angle = 90,vjust = 0.5),
+        legend.position = "top",
+        axis.title = element_blank())
 pl_g4_dot_gset
 
 # save Figure1 plots
 dir.create('../Results/', showWarnings = FALSE)
 
-pdf('../Results/Fig1_G4.pdf',width = 10,height = 7)
+pdf('../Results/Fig1_G4.pdf',width = 12,height = 8)
 pl_g4_umap_annot_col
 pl_g4_dot_gset
 dev.off()

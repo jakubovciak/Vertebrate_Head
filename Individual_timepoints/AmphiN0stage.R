@@ -1,4 +1,4 @@
-#### Markos et al 2023
+#### Markos et al 2024
 #### Script used for analysis of 10X matrices
 #### Stage N0
 
@@ -6,6 +6,7 @@
 library(Seurat)
 library(patchwork)
 library(ggplot2)
+set.seed(10)
 
 # Data load ####
 AmphiN0stage.data <-Read10X(data.dir = "../10X_matrices/N0/filtered_feature_bc_matrix/")
@@ -183,14 +184,18 @@ pl_n0_dot_gset<-DotPlot(
   col.max = 10,
   dot.min = 0,
   dot.scale = 10
-) + RotatedAxis() + NoLegend() + ggtitle('N0 selected genes expression')
+) + RotatedAxis() + 
+  ggtitle('N0 selected genes expression') +
+  theme(axis.text.x = element_text(angle = 90,vjust = 0.5),
+        legend.position = "top",
+        axis.title = element_blank())
 
 pl_n0_dot_gset
 
 # save Figure1 plots
 dir.create('../Results/', showWarnings = FALSE)
 
-pdf('../Results/Fig1_N0.pdf',width = 10,height = 7)
+pdf('../Results/Fig1_N0.pdf',width = 12,height = 8)
 pl_n0_umap_annot_col
 pl_n0_dot_gset
 dev.off()

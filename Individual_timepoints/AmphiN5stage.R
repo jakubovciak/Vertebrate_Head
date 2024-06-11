@@ -1,4 +1,4 @@
-#### Markos et al 2023
+#### Markos et al 2024
 #### Script used for analysis of 10X matrices
 #### Stage N5
 
@@ -6,6 +6,7 @@
 library(Seurat)
 library(patchwork)
 library(ggplot2)
+set.seed(10)
 
 # Data load ####
 AmphiN5stage.data <-Read10X(data.dir = "../10X_matrices/N5/filtered_feature_bc_matrix/")
@@ -262,17 +263,20 @@ pl_n5_dot_gset<-DotPlot(
   features = c("FoxA1","Six1/2","Ap2","Hex","Notch","Pax6","Otx","Six4/5","Has2","Irxc","Nkx2-2","Dmbx","Irxb","SoxE","Ptch","Brachyury1","Islet","Gata4/5/6","FoxF1","Blimp","Wnt3","Rspo2","Tbx1","Msxlx","Wnt2","Six3/6","Pitx2","FoxE4","Pax9","FoxQ1","FoxC","Wnt11","Nodal","Shh","Pou3f4","Lhx3","Nkx2-1","Pax2/5","Vent1","Dkk1/2/4","Elav","Fezf"),
   cols = c('snow2', 'red1'),
   col.min = -2,
-  col.max = 10,
+  col.max = 3,
   dot.min = 0,
   dot.scale = 10
-) + RotatedAxis() + NoLegend() + ggtitle('N5 selected genes expression')
-
+) + RotatedAxis()+
+  ggtitle('N5 selected genes expression') + 
+  theme(axis.text.x = element_text(angle = 90,vjust = 0.5),
+        legend.position = "top",
+        axis.title = element_blank())
 pl_n5_dot_gset
 
 # save Figure1 plots
 dir.create('../Results/', showWarnings = FALSE)
 
-pdf('../Results/Fig1_N5.pdf',width = 10,height = 7)
+pdf('../Results/Fig1_N5.pdf',width = 12,height = 8)
 pl_n5_umap_annot_col
 pl_n5_dot_gset
 dev.off()

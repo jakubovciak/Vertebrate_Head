@@ -1,4 +1,4 @@
-#### Markos et al 2023
+#### Markos et al 2024
 #### Script used for analysis of 10X matrices
 #### Stage N2
 
@@ -6,6 +6,7 @@
 library(Seurat)
 library(patchwork)
 library(ggplot2)
+set.seed(10)
 
 # Data load ####
 AmphiN2stage.data <-Read10X(data.dir = "../10X_matrices/N2/filtered_feature_bc_matrix/")
@@ -179,17 +180,33 @@ pl_n2_dot_gset<-DotPlot(
   col.min = -2,
   col.max = 10,
   dot.min = 0,
-  dot.scale = 10
-) + RotatedAxis()+ NoLegend() + ggtitle('N2 selected genes expression')
-
+  dot.scale = 12
+) + RotatedAxis()+
+  ggtitle('N2 selected genes expression') + 
+  theme(axis.text.x = element_text(angle = 90,vjust = 0.5),
+        legend.position = "top",
+        axis.title = element_blank())
 pl_n2_dot_gset
+
+pl_n2_violin_gset <- VlnPlot(
+  AmphiN2stage,
+  features = c(
+    "Myl12b","SoxB1c","FoxE4","Six1/2","Slc6a9","Irxa","Irxb","Fgfa","Dkk3","Lhx2/9","Shh","Msxlx","Has2","FoxF1","Tbx1","Mnx"),
+  stack = FALSE,
+  raster = FALSE,
+)
+pl_n2_violin_gset
 
 # save Figure1 plots
 dir.create('../Results/', showWarnings = FALSE)
 
-pdf('../Results/Fig1_N2.pdf',width = 10,height = 7)
+pdf('../Results/Fig1_N2.pdf',width = 12,height = 8)
 pl_n2_umap_annot
 pl_n2_dot_gset
+dev.off()
+
+pdf('../Results/Fig1_N2_violin.pdf',width = 12,height = 12)
+pl_n2_violin_gset
 dev.off()
 
 # save Seurat object as RDS
