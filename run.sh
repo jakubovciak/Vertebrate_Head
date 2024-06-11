@@ -54,3 +54,5 @@ sh ./run_1to1_comparisons.sh
 echo "
 Finished SAMap workflow, check rendered reports in individual folders
 "
+
+cd ..

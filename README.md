@@ -1,26 +1,28 @@
-# Markos et al 2023: Cell type and regulatory analysis in amphioxus illuminates evolutionary origin of the vertebrate head
+# Markos et al 2024: Cell type and regulatory analysis in amphioxus illuminates evolutionary origin of the vertebrate head
 
 ## Introduction
 
-This repository contains scripts and input data used for analysis of single cell RNA-Seq data presented in Markos et al 2023[^1]. Data consist of four 10X datasets, each representing selected stage of Amphioxus *(Branchiostoma floridae)* embryonic development. Aim of the analyses is to annotate the data and investigate developmental trajectories (transitions) across the identified celltypes and stages (timepoints) according to the hypotheses presented in the paper.
+This repository contains scripts and input data used for analysis of single cell RNA-Seq data presented in Markos et al 2024[^1]. Data consist of four 10X datasets, each representing selected stage of Amphioxus *(Branchiostoma floridae)* embryonic development. Aim of the analyses is to annotate the data and investigate developmental trajectories (transitions) across the identified celltypes and stages (timepoints) according to the hypotheses presented in the paper.
 
 *Important: Purpose of the repository is to serve as extended data accompanying the manuscript, we do not wish to update the code except for requirements raised during the review process.*
 
-## Software Prerequisites
+## Prerequisites
 
 Easiest way to reproduce the analysis is using provided `Dockerfile` to build corresponding image and running `run.sh` script within respective docker container in the repository path.
 
-Main body of the analyses is written in R with addition of some Python. The annotation part was run under R 4.2.1 and Seurat 4.3.0. The transitions part requires installation of some extra R and Python packages.
+The annotation part was run under R 4.2.1 and Seurat 4.3.0. The transitions and SAMap part requires installation of some extra R and Python packages, handled preferentially by conda environments.
 
 We also provide `renv.lock` file to manually install all necessary R packages and `environment.yml` file to recreate conda environment for the Python part. Please refer to [renv](https://rstudio.github.io/renv/reference/restore.html) and [conda](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#create-env-from-file) manuals. Code is tested under Ubuntu 20.04.5 LTS. Installation of R, all R packages and conda environment should take up to 60 minutes, depending on hardware performance and download speed.
 
 ## Analyses description
 
-Canonical steps of Seurat workflow were used to load, filter, normalize and cluster expression matrices of individual timepoints (provided here). Clusters were annotated in supervised manner based on known sets of markers, see the paper for details. Scripts describing timepoints analyses generate graphical output and are meant to be run interactively using e.g. RStudio or other R compatible IDE. They also output final Seurat objects in RDS format, which are used for downstream transitions analysis. We present the transitions analysis scripts in [R Markdown format](https://bookdown.org/yihui/rmarkdown/basics.html) (with exception of some technical steps) for smoother readability and execution with e.g. `rmarkdown::render('01_Integration.Rmd')`.
+Canonical steps of Seurat workflow were used to load, filter, normalize and cluster expression matrices of individual timepoints (provided here). Clusters were annotated in supervised manner based on known sets of markers, see the paper for details. Scripts describing timepoints analyses generate graphical output and are meant to be run interactively using e.g. RStudio or other R compatible IDE. They also output final Seurat objects in RDS format, which are used for downstream transitions analysis. We present the transitions analysis scripts in [R Markdown format](https://bookdown.org/yihui/rmarkdown/basics.html) (with exception of some technical steps) for smoother readability and execution with e.g. `rmarkdown::render('01_Integration.Rmd')`. SAMap workflow uses python only, therefore, [jupyter notebooks](https://jupyter.org/) are used here.
 
 All script files have their description in the header with some hints where appropriate. Paths are set as relative, meaning the code can be run from the downloaded repository directly, with R script's working directory being set to the same path as the source files.
 
 To save computational time, we provide precomputed cell-by-cell transition probabilities matrix, which serves as an input to the last part of transitions workflow. This is used as default, to recompute the transition matrix de novo, please reset respective parameters in `04_Urd_transition_matrix.Rmd` and `05_Transition_graphs.Rmd` headers. This will increase running time substantially over 60 minutes.
+
+[SAMap](https://github.com/atarashansky/SAMap) workflow requires external input data from Farrell et al 2018[^2]. We use URD object and metadata table downloaded from [Single Cell Portal](https://singlecell.broadinstitute.org/single_cell/study/SCP162/single-cell-reconstruction-of-developmental-trajectories-during-zebrafish-embryogenesis) which is converted to h5ad files using [zebra_convert_URD.R](https://github.com/jakubovciak/Vertebrate_Head/blob/main/SAMap/analysis/input_data/zebra_convert_URD.R). Gene ids from URD object were mapped to Ensembl 81 GRCz10 protein ids using gene symbols and ZFIN symbols obtained from Ensembl 81 BioMart. Also, reciprocal blast results between amphioxus GCA_000003815.2 transcripts and zebrafish Ensembl 81 GRCz10 proteins need to be provided manually. Downstream SAMap analysis is divided to two parts. First, comparisons with combined stages from either zebrafish or amphioxus are executed from individualy tuned jupyter notebooks with [run_combinations.sh](https://github.com/jakubovciak/Vertebrate_Head/blob/main/SAMap/analysis/run_combinations.sh). Second, 1 vs 1 comparisons of selected individual stages are executed from jupyter notebook templates parametrized by configuration files with [run_1to1_comparisons.sh](https://github.com/jakubovciak/Vertebrate_Head/blob/main/SAMap/analysis/run_1to1_comparisons.sh).
 
 ### Quick demonstration
 
@@ -28,12 +30,13 @@ We provide a wrapper script file `R_demo.r` which executes annotation analysis f
 
 ## Content listing
 
-The content listing is presented in order of the workflow logic: The individual timepoints first, then the transitions part. We provide also cell metadata table, resulting matrix of transition probabilities and gene id conversion table. Direct code output is not part of the repository.
+The content listing is presented in order of the workflow logic: The individual timepoints first, then the transitions part and finally SAMap. We provide also cell metadata table, resulting matrix of transition probabilities and gene id conversion table. Direct code output is not part of the repository.
 
 - **10X_matrices**
     
     - **G4; N0; N2; N5** directories: outputs of 10X cellranger count pipeline (filtered expression matrices), inputs for the individual timepoints analyses
     - **gene_id_conversion_table.csv**: gene id mapping between BraFlo100 and BraLan3 gene models, used to convert gene ids while loading the 10X data with Seurat
+
 - **Individual_timepoints**
     
     - **Amphi*stage.R**: Seurat workflow used to process individual timepoints data separately
@@ -60,10 +63,18 @@ The content listing is presented in order of the workflow logic: The individual 
     - **05_Transition_graphs.Rmd**: processing of transition matrices, presenting them as directed graphs and exporting
         
     - **_functions.R**: special functions used throughout the transitions workflow
+
+- **SAMap**
+
+    - **environment.yml**: exported conda environment describing used Python modules and their dependencies for SAMap workflow
+    - **analysis**: jupyter notebooks, templates, configs and helper scripts directing the SAMap analysis
+    - **input_data**: scripts for generating h5ad files for SAMap (data for zerbrafish are not provided here)
+
 - **Results**
 
-    - **Fig1_*_original.pdf**: output of `R_demo.R`
+    - **Fig1_*_original.pdf**: precomputed output of `R_demo.R`
     - **tm_original.RDS**: precomputed transition probabilities matrix
+    
 - **Export**
     
     - **Cell_metadata.csv**: celltype assignment of cells present in the analyses (all timepoints merged) with integrated UMAP coordinates used in the paper (not generated by the repository code)
@@ -71,3 +82,4 @@ The content listing is presented in order of the workflow logic: The individual 
     
 
 [^1]: Cell type and regulatory analysis in amphioxus illuminates evolutionary origin of the vertebrate head, In review
+[^2]: Single-cell reconstruction of developmental trajectories during zebrafish embryogenesis. Farrell JA & Wang Y (equal contribution), Riesenfeld SJ, Shekhar K, Regev A & Schier AF (equal contribution). Science 26 Apr 2018. doi: 10.1126/science.aar3131
