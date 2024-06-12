@@ -2,5 +2,3 @@ stage_zebra,5hpf_50
 stage_amp,G4
 path_zebra,../../input_data/zf_farrell5.3_ZF50.h5ad
 path_amp,../../input_data/Amp_h5ad/Amp_G4.h5ad
-sankey_fine_t,0.25
-sankey_coarse_t,0.5

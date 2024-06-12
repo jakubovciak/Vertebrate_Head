@@ -4,7 +4,6 @@ library(Rhdf5lib)
 library(HDF5Array)
 library(scater)
 library(dplyr)
-library(scran)
 #library(GenomicFeatures)
 
 

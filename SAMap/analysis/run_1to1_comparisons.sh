@@ -5,7 +5,7 @@ rm -rf amp_sub*
 
 # prepare directories
 AMP_SUB_DIRS=$(ls configs/ | sed 's/config/amp_sub/g' | sed 's/.csv//g' )
-mkdir $AMP_SUB_DIR
+mkdir $AMP_SUB_DIRS
 
 # execute notebooks from templates and configs
 

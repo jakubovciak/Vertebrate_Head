@@ -43,5 +43,6 @@ Mapping_table*.csv
 timepoints_rds/
 output/
 figures/
+amp_sub*/
 
 

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 set -e
 
@@ -44,12 +44,18 @@ Started SAMap workflow ...
 
 conda deactivate
 
+cd SAMap
+
+cd input_data/Amp_h5ad
+sh Rscript export_individual_h5ad.R
+
+cd ../../analysis
+
 conda activate SAMap
 
-cd SAMap/analysis
-
-sh ./run_combinations.sh
 sh ./run_1to1_comparisons.sh
+
+chown -R rstudio:rstudio *
 
 echo "
 Finished SAMap workflow, check rendered reports in individual folders
