@@ -8,7 +8,7 @@ This repository contains scripts and input data used for analysis of single cell
 
 ## Prerequisites
 
-Easiest way to reproduce the analysis is using provided `Dockerfile` to build corresponding image and running `run.sh` script within respective docker container in the repository path.
+Easiest way to reproduce the analysis is using provided `Dockerfile` to build corresponding image and running `bash -i run.sh` script within respective docker container in the repository path.
 
 The annotation part was run under R 4.2.1 and Seurat 4.3.0. The transitions and SAMap part requires installation of some extra R and Python packages, handled preferentially by conda environments.
 
