@@ -1,4 +1,4 @@
-#### Markos et al 2023
+#### Markos et al
 #### functions used in transitions workflow
 
 

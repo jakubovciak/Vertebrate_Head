@@ -1,5 +1,5 @@
 ---
-title: "Markos et al 2023 Transitions graphs"
+title: "Markos et al Transitions graphs"
 author: "Jan Kubovciak, Institute of Molecular Genetics of the Czech Academy of Sciences"
 output:
   pdf_document:

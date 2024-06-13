@@ -1,4 +1,4 @@
-#### Markos et al 2023
+#### Markos et al 2024
 #### Script used for analysis of 10X matrices
 #### Zebrafish markers on Amphioxus data
 

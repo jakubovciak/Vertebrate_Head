@@ -1,4 +1,4 @@
-#### Markos et al 2023
+#### Markos et al 2024
 #### CytoTRACE pseudotime calculation based on integrated data
 #### Can be run from bash by `python 03_Cytotrace_pseudotime.py` (with designated conda environment activated!)
 

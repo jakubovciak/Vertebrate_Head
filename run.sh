@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
@@ -21,8 +21,6 @@ Started celltype transitions workflow ...
 Rscript -e "rmarkdown::render(input = '01_Integration.Rmd', output_dir = '../Results', clean = TRUE)"
 
 Rscript 02_Convert_to_anndata.R
-
-source /root/miniconda3/etc/profile.d/conda.sh
 
 conda activate ctk_pseudotime_env
 
@@ -47,7 +45,7 @@ conda deactivate
 cd SAMap
 
 cd input_data/Amp_h5ad
-sh Rscript export_individual_h5ad.R
+Rscript export_individual_h5ad.R
 
 cd ../../analysis
 
