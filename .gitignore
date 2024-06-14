@@ -32,7 +32,9 @@ renv/
 
 # others
 .DS_Store
-reference/
+maps_prot/
+amp_tr_gene_map.csv
+zf_final_prot_gene_map.csv
 
 # output
 PP_markers_homology_amp_all_zf_f_5to12.csv
