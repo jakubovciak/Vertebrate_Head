@@ -10,7 +10,7 @@ The recommended way to reproduce the analysis is cloning the repository, using p
 
 ## Prerequisites
 
-## Data
+### Data
 
 SAMap analysis requires some input files too large to be stored within the repository:
 
