@@ -1,3 +1,4 @@
+![IMGlogo](./imglogo-name-en-left-color-rgb.png)
 # Markos et al 2024: Cell type and regulatory analysis in amphioxus illuminates evolutionary origin of the vertebrate head
 
 ## Introduction
@@ -5,8 +6,6 @@
 This repository contains scripts and input data used for analysis of single cell RNA-Seq data presented in Markos et al 2024<sup>[\[1\]](#fn1)</sup>. Data consist of four 10X datasets, each representing selected stage of Amphioxus *(Branchiostoma floridae)* embryonic development. Aim of the analyses is to annotate the data and investigate developmental trajectories (transitions) across the identified celltypes and stages (timepoints) according to the hypotheses presented in the paper. In addition, SAMap<sup>[\[2\]](#fn2)</sup> analysis is conducted to quantify homology between cell types in presented Amphioxus expression data and [Zebrafish single cell atlas](https://singlecell.broadinstitute.org/single_cell/study/SCP162/single-cell-reconstruction-of-developmental-trajectories-during-zebrafish-embryogenesis).
 
 The recommended way to reproduce the analysis is cloning the repository, using provided `Dockerfile` to build corresponding image and running `bash -i run.sh` script within respective [docker](https://www.docker.com/get-started/) container in the repository path. Some large input files must be downloaded or generated manually prior to the execution, see below.
-
-*Important: Purpose of the repository is to serve as extended data accompanying the manuscript, we do not wish to update the code except for requirements raised during the review process.*
 
 ## Prerequisites
 
