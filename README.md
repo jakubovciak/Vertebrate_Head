@@ -3,7 +3,7 @@
 
 ## Introduction
 
-This repository contains scripts and input data used for analysis of single cell RNA-Seq data presented in Markos et al. 2024<sup>[\[1\]](#fn1)</sup>. Data consist of four 10X datasets, each representing selected stage of Amphioxus *(Branchiostoma floridae)* embryonic development. Aim of the analyses is to annotate the data and investigate developmental trajectories (transitions) across the identified celltypes and stages (timepoints) according to the hypotheses presented in the paper. In addition, SAMap<sup>[\[2\]](#fn2)</sup> analysis is conducted to quantify homology between cell types in presented Amphioxus expression data and [Zebrafish single cell atlas](https://singlecell.broadinstitute.org/single_cell/study/SCP162/single-cell-reconstruction-of-developmental-trajectories-during-zebrafish-embryogenesis).
+This repository contains scripts and input data used for analysis of single cell RNA-Seq data presented in Markos 2024<sup>[\[1\]](#fn1)</sup>. Data consist of four 10X datasets, each representing selected stage of Amphioxus *(Branchiostoma floridae)* embryonic development. Aim of the analyses is to annotate the data and investigate developmental trajectories (transitions) across the identified celltypes and stages (timepoints) according to the hypotheses presented in the paper. In addition, SAMap<sup>[\[2\]](#fn2)</sup> analysis is conducted to quantify homology between cell types in presented Amphioxus expression data and [Zebrafish single cell atlas](https://singlecell.broadinstitute.org/single_cell/study/SCP162/single-cell-reconstruction-of-developmental-trajectories-during-zebrafish-embryogenesis).
 
 The recommended way to reproduce the analysis is cloning the repository, using provided `Dockerfile` to build corresponding image and running `bash -i run.sh` script within respective [docker](https://www.docker.com/get-started/) container in the repository path. Some large input files must be downloaded or generated manually prior to the execution, see below.
 
@@ -84,7 +84,7 @@ The content listing is presented in order of the workflow logic: The individual 
 
 * * *
 
-1.  Cell type and regulatory analysis in amphioxus illuminates evolutionary origin of the vertebrate head. Markos A., et al. Nature Communications [↩︎](#fnref1)
+1.  Cell type and regulatory analysis in amphioxus illuminates evolutionary origin of the vertebrate head. Markos, A., Kubovciak, J., Mikula Mrstakova, S. et al.  Nat Commun 15, 8859 (2024). https://doi.org/10.1038/s41467-024-52938-7 [↩︎](#fnref1)
     
 2.  Mapping single-cell atlases throughout Metazoa unravels cell type evolution. Tarashansky, Alexander J., et al. Elife 10 (2021): e66747. [↩︎](#fnref2)
     
