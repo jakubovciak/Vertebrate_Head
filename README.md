@@ -3,7 +3,7 @@
 
 ## Introduction
 
-This repository contains scripts and input data used for analysis of single cell RNA-Seq data presented in Markos 2024<sup>[\[1\]](#fn1)</sup>. Data consist of four 10X datasets, each representing selected stage of Amphioxus *(Branchiostoma floridae)* embryonic development. Aim of the analyses is to annotate the data and investigate developmental trajectories (transitions) across the identified celltypes and stages (timepoints) according to the hypotheses presented in the paper. In addition, SAMap<sup>[\[2\]](#fn2)</sup> analysis is conducted to quantify homology between cell types in presented Amphioxus expression data and [Zebrafish single cell atlas](https://singlecell.broadinstitute.org/single_cell/study/SCP162/single-cell-reconstruction-of-developmental-trajectories-during-zebrafish-embryogenesis).
+This repository contains scripts and input data used for analysis of single cell RNA-Seq data presented in Markos 2024[^1]. Data consist of four 10X datasets, each representing selected stage of Amphioxus *(Branchiostoma floridae)* embryonic development. Aim of the analyses is to annotate the data and investigate developmental trajectories (transitions) across the identified celltypes and stages (timepoints) according to the hypotheses presented in the paper. In addition, SAMap[^2] analysis is conducted to quantify homology between cell types in presented Amphioxus expression data and [Zebrafish single cell atlas](https://singlecell.broadinstitute.org/single_cell/study/SCP162/single-cell-reconstruction-of-developmental-trajectories-during-zebrafish-embryogenesis).
 
 The recommended way to reproduce the analysis is cloning the repository, using provided `Dockerfile` to build corresponding image and running `bash -i run.sh` script within respective [docker](https://www.docker.com/get-started/) container in the repository path. Some large input files must be downloaded or generated manually prior to the execution, see below.
 
@@ -28,7 +28,7 @@ All script files have their description in the header with some hints where appr
 
 To save computational time, we provide precomputed cell-by-cell transition probabilities matrix, which serves as an input to the last part of transitions workflow. This is used as default, to recompute the transition matrix de novo, please reset respective parameters in `04_Urd_transition_matrix.Rmd` and `05_Transition_graphs.Rmd` headers. This will increase running time substantially.
 
-[SAMap](https://github.com/atarashansky/SAMap) workflow requires external input data from Farrell et al 2018<sup>[\[3\]](#fn3)</sup>. We use URD object and metadata table downloaded from [Single Cell Portal](https://singlecell.broadinstitute.org/single_cell/study/SCP162/single-cell-reconstruction-of-developmental-trajectories-during-zebrafish-embryogenesis) which is converted to h5ad files using [zebra_convert_URD.R](https://github.com/jakubovciak/Vertebrate_Head/blob/main/SAMap/input_data/zebra_convert_URD.R). Gene ids from URD object were mapped to Ensembl 81 GRCz10 protein ids using gene symbols and ZFIN symbols obtained from Ensembl 81 BioMart. 1 vs 1 comparisons of selected individual stages are executed from jupyter notebook templates parameterized by configuration files with [run_1to1_comparisons.sh](https://github.com/jakubovciak/Vertebrate_Head/blob/main/SAMap/analysis/run_1to1_comparisons.sh).
+[SAMap](https://github.com/atarashansky/SAMap) workflow requires external input data from Farrell et al 2018[^3]. We use URD object and metadata table downloaded from [Single Cell Portal](https://singlecell.broadinstitute.org/single_cell/study/SCP162/single-cell-reconstruction-of-developmental-trajectories-during-zebrafish-embryogenesis) which is converted to h5ad files using [zebra_convert_URD.R](https://github.com/jakubovciak/Vertebrate_Head/blob/main/SAMap/input_data/zebra_convert_URD.R). Gene ids from URD object were mapped to Ensembl 81 GRCz10 protein ids using gene symbols and ZFIN symbols obtained from Ensembl 81 BioMart. 1 vs 1 comparisons of selected individual stages are executed from jupyter notebook templates parameterized by configuration files with [run_1to1_comparisons.sh](https://github.com/jakubovciak/Vertebrate_Head/blob/main/SAMap/analysis/run_1to1_comparisons.sh).
 
 ### Quick demonstration
 
@@ -84,8 +84,8 @@ The content listing is presented in order of the workflow logic: The individual 
 
 * * *
 
-1.  Cell type and regulatory analysis in amphioxus illuminates evolutionary origin of the vertebrate head. Markos, A., Kubovciak, J., Mikula Mrstakova, S. et al.  Nat Commun 15, 8859 (2024). https://doi.org/10.1038/s41467-024-52938-7 [↩︎](#fnref1)
+[^1]:  Cell type and regulatory analysis in amphioxus illuminates evolutionary origin of the vertebrate head. Markos, A., Kubovciak, J., Mikula Mrstakova, S. et al.  Nat Commun 15, 8859 (2024). https://doi.org/10.1038/s41467-024-52938-7
     
-2.  Mapping single-cell atlases throughout Metazoa unravels cell type evolution. Tarashansky, Alexander J., et al. Elife 10 (2021): e66747. [↩︎](#fnref2)
+[^2]:  Mapping single-cell atlases throughout Metazoa unravels cell type evolution. Tarashansky, Alexander J., et al. Elife 10 (2021): e66747.
     
-3.  Single-cell reconstruction of developmental trajectories during zebrafish embryogenesis. Farrell J. A. & Wang Y., et al. Science 26 Apr 2018. doi: 10.1126/science.aar3131 [↩︎](#fnref3)
+[^3]:  Single-cell reconstruction of developmental trajectories during zebrafish embryogenesis. Farrell J. A. & Wang Y., et al. Science 26 Apr 2018. doi: 10.1126/science.aar3131
